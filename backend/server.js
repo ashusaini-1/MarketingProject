@@ -1,10 +1,16 @@
-const app=require('./app');
+
 const dotenv=require('dotenv');
-const cors = require('cors');
+const app=require('./app');
+// const cors = require('cors');
 const connectDatabase=require("./config/db")
 
 
-app.use(cors());
+// app.use(cors({
+//     origin: 'http://localhost:3000', // Specify your frontend domain
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//   }));
+  
 
 ///config
 dotenv.config({path:"backend/config/config.env"});
