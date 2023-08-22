@@ -2,15 +2,18 @@
 import React, { useState } from "react";
 import { Input, Box, Center, Heading, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { register } from "../../action/userAction";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+
+import jwt_decode from "jwt-decode";
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
   const toast = useToast();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [name, setName] = useState(); // Initialize with an empty string
   const [email, setEmail] = useState();
@@ -48,9 +51,8 @@ const SignUpForm = () => {
       myForm.set("number", number);
       myForm.set("password", password);
 
-     
       // Dispatch the register action directly
-    await dispatch(register(myForm)); // Use dispatch here
+      await dispatch(register(myForm)); // Use dispatch here
 
       toast({
         title: "Registration Successful",
@@ -72,56 +74,71 @@ const SignUpForm = () => {
   };
 
   return (
-    <Center h="80vh">
+    <Center h="100vh">
       <Box p={6} shadow="md" borderRadius="md" bg="white" w="300px">
         <Heading size="lg" mb={4}>
           Create Account
         </Heading>
-       
-          <Input
-            type="text"
-            name="name"
-            value={name}
-            placeholder="Name"
-            mb={4}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            type="email"
-            name="email"
-            value={email}
-            placeholder="Email"
-            mb={4}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            type="number"
-            name="number"
-            value={number}
-            placeholder="Number"
-            mb={4}
-            onChange={(e) => setNumber(e.target.value)}
-          />
-          <Input
-            type="password"
-            name="password"
-            value={password}
-            placeholder="Password"
-            mb={4}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Input
-            type="password"
-            name="confirmpassword"
-            value={confirmpassword}
-            placeholder="confirmPassword"
-            mb={4}
-            onChange={(e) => setConfirmpassword(e.target.value)}
-          />
-          <Button onClick={registerSubmit}  colorScheme="blue" size="lg" w="full">
-            Sign Up
-          </Button>
-      
+        <Input
+          type="text"
+          name="name"
+          value={name}
+          placeholder="Name"
+          mb={4}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Input
+          type="email"
+          name="email"
+          value={email}
+          placeholder="Email"
+          mb={4}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          type="number"
+          name="number"
+          value={number}
+          placeholder="Number"
+          mb={4}
+          onChange={(e) => setNumber(e.target.value)}
+        />
+        <Input
+          type="password"
+          name="password"
+          value={password}
+          placeholder="Password"
+          mb={4}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Input
+          type="password"
+          name="confirmpassword"
+          value={confirmpassword}
+          placeholder="confirmPassword"
+          mb={4}
+          onChange={(e) => setConfirmpassword(e.target.value)}
+        />
+        <Button onClick={registerSubmit} colorScheme="blue" size="lg" w="full">
+          Sign Up
+        </Button>
+        <Center>
+          <Box mt={5}>
+            <GoogleOAuthProvider clientId="653562759220-bjopl3337f1lc0nvio2rfv8q8hjbi1ag.apps.googleusercontent.com">
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  const decode = jwt_decode(credentialResponse.credential);
+                  console.log(decode);
+                  console.log(credentialResponse);
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+            </GoogleOAuthProvider>
+          </Box>
+        </Center>
+
         <Text mt={4} textAlign="center">
           New One?{" "}
           <Link to="/login">
@@ -136,3 +153,8 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+
+// "clientsecret==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
+// id=653562759220-bjopl3337f1lc0nvio2rfv8q8hjbi1ag.apps.googleusercontent.com"
+
+// AIzaSyD9nJAL1XYYDDuHyCsgeJ1HQoK13oZlqg8
